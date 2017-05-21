@@ -1,0 +1,1 @@
+servicefile = ["ChatServer.js"];

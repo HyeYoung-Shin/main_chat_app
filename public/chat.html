@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chatting app</title>
+  </head>
+  <body>
+    <fieldset id="roomselect">
+      <legend>select one</legend>
+      <input id ="Random" type="button" value="1:1 랜덤 채팅" onclick="moverandom()">
+      <input id ="Cond"type="button"value="1:1 조건 채팅">
+    </fieldset>
+
+    <script type="text/javascript"src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript"scr="/socket.io/socket.io.js"></script>
+    <linkrel="stylesheet"href="/stylesheets/style.css">
+    <script>
+      var serverUrl = 'http://localhost:3000';
+      var socket = io.connect(serverUrl);
+
+      var roomnum =0;
+      var firstuser =1;
+
+      $(document).ready(function(){
+        $("#Random").click(function(){
+          var data = {"roomname":roomnum++, "username":firstuser};
+          socket.emit('random_request', data);
+        });
+      });
+      function moverandom(){
+        location.href = "/randomchat";
+      }
+    </script>
+  </body>
+</html>
