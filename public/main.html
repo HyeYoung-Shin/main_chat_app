@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <metahttp-equiv="Content-Type"content="text/html; charset=utf-8">
+    <title>chatting app</title>
+    <style>
+      .chat_log{ width: 95%; height: 200px; }
+      .name{ width: 10%; }
+      .message{ width: 70%; }
+      .chat{ width: 10%;}
+    </style>
+    <script scr="/socket.io/socket.io.js"></script>
+    <script type="text/javascript"src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <linkrel="stylesheet"href="/stylesheets/style.css">
+    <script type="text/javascript">
+
+      $(document).ready(function(){
+
+        $('#random').click(function(){
+          $('#room_select').hide();
+          $(".wait").show();
+          //$(".chat_box").show();
+
+          socket.emit('random_request');
+        });
+
+        socket.on('completeMatch', function(data){
+                 console.log('completeMatch!');
+                 $('.room').hide();
+                 $('.wait').hide();
+                 $('.chat_box').show();
+        });
+
+        $('#chat').on('submit', function(e){
+          socket.emit('send message', $('#name').val(), $('#message').val());
+          $('#message').val("");
+          e.preventDefault();
+        });
+
+        socket.on('receive message', function(msg){
+          $('#chatLog').append(msg+"\n");
+          $('#chatLog').scrollTop($('#chatLog').innerHeight())
+        });
+        socket.on('change name', function(name){
+          $('#name').val(name);
+        });
+        socket.on('disconnected', function(name){
+          $('#chatLog').appned(name+"이 나갔습니다. \n");
+        });
+
+      });
+
+/*      function moverandom(){
+        var data = {"roomname":roomnum, "username":firstuser};
+        socket.emit('random_request', data);
+        location.href = "/randomchat";
+      }
+*/
+    </script>
+  </head>
+
+  <body>
+    <fieldset id="room_select">
+      <legend>  select one  </legend>
+      <input id ="random" type="button" value="1:1 랜덤 채팅">
+      <input id ="Cond"type="button"value="1:1 조건 채팅">
+    </fieldset>
+    <div class="wait" style="display:none">
+         <div>상대방 기다리는 중...</div>
+         <button id="btnCancelRequest" class="btn">취소</button>
+     </div>
+     <div class="chat_box" style="display:none">
+       <div>
+         <textarea id="chatLog" class="chat_log" readonly></textarea>
+       </div>
+       <form id="chat">
+         <input id="name" class="name" type="text" readonly>
+         <input id="message" class="message" type="text">
+         <input type="submit" class="chat" value="chat"/>
+       </form>
+     </div>
+
+  </body>
+</html>

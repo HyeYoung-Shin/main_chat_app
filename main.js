@@ -1,15 +1,18 @@
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
+var bodyParser = require('body-parser');
 
 var fs = require('fs');
 var path = require('path');
 
 var count =0;
+var socketRoom = {};
 
 app.set('port', 3000);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
 
 app.start = app.listen = app.aaa = function(){
   return server.listen.apply(server, arguments);
@@ -20,11 +23,7 @@ app.aaa(app.get('port'), function(){
 });
 
 app.get("/", function(req, res){
-  res.sendfile("public/chat.html");
-});
-
-app.get("/randomchat", function(req, res){
-  res.sendfile("public/randomchat.html");
+  res.sendfile("public/main.html");
 });
 
 function include(file_){
