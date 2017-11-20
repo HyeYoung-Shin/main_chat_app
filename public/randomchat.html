@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>randomchat</title>
+    <title>chatting</title>
     <style>
       .chat_log{ width: 95%; height: 200px; }
       .name{ width: 10%; }
@@ -20,8 +20,8 @@
       <input type="submit" class="chat" value="chat"/>
     </form>
     <div id="box" class="box">
-    <script type="text/javascript"src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script type="text/javascript"scr="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"> </script>
     <script>
       var socket = io();
       $('#chat').on('submit', function(e){
@@ -29,15 +29,20 @@
         $('#message').val("");
         e.preventDefault();
       });
-      socket.on('receive message', function(msg){
+
+      socket.on('receive message', function(msg, tr){
         $('#chatLog').append(msg+"\n");
         $('#chatLog').scrollTop($('#chatLog').innerHeight())
+        if( tr == 1){
+          alert("경고\n부적절한 단어 사용");
+        }
       });
       socket.on('change name', function(name){
         $('#name').val(name);
       });
       socket.on('disconnected', function(name){
-        $('#chatLog').appned(name+"이 나갔습니다. \n");
+        $('#chatLog').append(name+" 님이 나갔습니다. \n");
+        socket.emit('room disconnect');
       });
     </script>
   </body>
