@@ -3,12 +3,10 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
-var passport = require('passport');
-var session = require('express-session');
-var flash = require('connect-flash');
-var async = require('async');
-/*
-mongoose.connect(process.env.MONGO_DB);
+var bodyParser = require('body-parser');
+const v = require('voca');
+
+mongoose.connect("mongodb://shinhy8101:quftkah775@ds115866.mlab.com:15866/word_dir");
 var db = mongoose.connection;
 db.once("open", function(){
   console.log("DB connected");
@@ -16,31 +14,33 @@ db.once("open", function(){
 db.on("error", function (err){
   console.log("DB ERROR :", err);
 });
-var dataSchema = mongoose.Schema({
-  name:String,
-  count:Number
+
+
+//model setting
+var wordSchema = mongoose.Schema({
+  word: {type:String, required:true},
+  frequency: {type:Number, required:true}
 });
-var Data = mongoose.model('data', dataSchema);
+
+var Word = mongoose.model('Word', wordSchema);
+
+//Word.remove({_id:id});
+
+/*var passport = require('passport');
+var session = require('express-session');
+var flash = require('connect-flash');
+var async = require('async');
+
+//if there is no myData, create
 Data.findOne({name:"myData"}, function(err, data){
   if(err) return console.log("Data ERROR:" , err);
-  if(!err){
+  if(!data){
     Data.create({name:"myData", count:0}, function(err, data){
-      if(err) return console.log("Data ERROR:", err);
+      if(err) return console.log("Data create ERROR:", err);
       console.log("Counter initialized :", data);
     });
   }
 });
-
-//model setting
-var userSchema = mongoose.Schema({
-  email: {type:String, required:true, unique:true},
-  id: {type:String, required:true, unique:true},
-  password: {type:String, required:true},
-  age: {type:Number, required:true},
-//  gender: {type:Char, require:true},
-  createdAt: {type:Date, default:Date.now}
-});
-var User = mongoose.model('user', userSchema);
 */
 
 var fs = require('fs');
@@ -57,9 +57,11 @@ app.get("/useCondChat", function(req, res){
   res.sendfile("public/useCondChat.html");
 });
 // set middleware
-app.use(flash());
+//app.user(bodyParser.json());
 
 /*
+app.use(flash());
+
 app.use(session({secret:'MySecret'}));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -175,7 +177,7 @@ for(var i=0; i< servicefile.length; i++){
 
 app.all('*', function(req, res, next){
   next();
-})
+});
 
 
 http.listen('3000', function(){

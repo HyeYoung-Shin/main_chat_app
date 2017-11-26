@@ -30,19 +30,28 @@
         e.preventDefault();
       });
 
-      socket.on('receive message', function(msg, tr){
+      socket.on('receive message', function(msg){
         $('#chatLog').append(msg+"\n");
         $('#chatLog').scrollTop($('#chatLog').innerHeight())
-        if( tr == 1){
-          alert("경고\n부적절한 단어 사용");
+      });
+      socket.on('receive warning', function(tr){
+        if(tr <4){
+          alert("경고"+tr+"\n바른 말을 사용합시다~");}
+        else if( tr == 4){
+            alert("퇴장당했습니다");
+            socket.emit('disconnect');
+            location.href = "/";
         }
       });
+
       socket.on('change name', function(name){
         $('#name').val(name);
       });
       socket.on('disconnected', function(name){
         $('#chatLog').append(name+" 님이 나갔습니다. \n");
-        socket.emit('room disconnect');
+        alert("채팅이 종료되었습니다.\n");
+        location.href = "/";
+        //socket.emit('room disconnect');
       });
     </script>
   </body>

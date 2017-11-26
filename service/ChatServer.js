@@ -18,8 +18,16 @@ io.sockets.on('connection', function(socket){
       usernum = 2;
 
   var name = "user" + usernum;
+  var trouble =0;
   io.to(socket.id).emit('change name', name);
   io.sockets.in("room-"+roomnum).emit('receive message', name+"님이 입장했습니다.");
+
+  if(io.sockets.adapter.rooms["room-"+roomnum].length == 1){
+    io.sockets.in("room-"+roomnum).emit('receive message', "상대방을 기다리는 중입니다.");
+  }
+  else if(io.sockets.adapter.rooms["room-"+roomnum].length == 2){
+    io.sockets.in("room-"+roomnum).emit('receive message', "채팅을 시작하세요.");
+  }
 
 
   socket.on('disconnect', function(){
@@ -28,18 +36,32 @@ io.sockets.on('connection', function(socket){
     socket.broadcast.to("room-"+roomnum).emit('disconnected', name);
   });
 
-  socket.on('room disconnect', function(){
-    socket.leave("room-"+roomnum);
-    console.log('room disconnected ');
-  });
 
   socket.on('send message', function(name,text){
     var msg = name + ' : '+ text;
-    var trouble = 0;
-//    console.log(msg);
-    if(text == "ㅂㅅ" || "ㅄ"){
-      trouble = 1;
+    io.sockets.in("room-"+roomnum).emit('receive message', msg);
+
+    var wordItem;
+    var check=0;
+    console.log(text);
+    //checking the text with db directory
+    textArray = v.split(text, ' ');
+
+    for( var i=0; textArray[i] != null ; i++){
+      wordItem = textArray[i];
+
+      Word.findOne({word:wordItem}, function(err, data){
+        if(err) return console.log("Data finding err:" , err);
+        if(data != null){
+          console.log(data.word+data.frequency);
+          if(check != 1){
+            check = 1;
+            trouble = trouble+1;
+            io.to(socket.id).emit('receive warning',trouble);
+          }
+        }
+      });
     }
-    io.sockets.in("room-"+roomnum).emit('receive message', msg, trouble);
+
   });
 });

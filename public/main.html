@@ -2,27 +2,19 @@
 <html>
   <head>
     <metahttp-equiv="Content-Type"content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="/stylesheets/master.css">
     <title>chatting app</title>
     <script scr="/socket.io/socket.io.js"></script>
     <script type="text/javascript"src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script type="text/javascript">
-      function moverandom(){
-        location.href = "/randomchat";
-      }
-      function movecond(){
-        location.href = "/useCondChat";
-      }
-    </script>
   </head>
   <body>
+    <header>
+      <h1>Chat application</h1>
+    </header>
+    <h2> provides a service that analyzes and manages conversation of users</h2>
     <fieldset id="room_select">
-      <legend>  select one  </legend>
-      <input id ="random" type="button" value="1:1 Random Chat" onclick="moverandom()">
-      <input id ="Cond"type="button"value="1:1 Conditional Chat" onclick="movecond()">
+      <legend>  start  </legend>
+      <button class="float_middle" onclick="location.href='/randomchat'">1:1 Random Chat</button>
     </fieldset>
-    <div class="wait" style="display:none">
-         <div>상대방을 기다리는 중...</div>
-         <button id="btnCancelRequest" class="btn">취소</button>
-     </div>
   </body>
 </html>

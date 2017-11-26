@@ -1,0 +1,13 @@
+h1{
+  align:center;
+}
+h2{
+  color:blue;
+  text-align:center;
+  margin: 0;
+  margin-bottom: 10px;
+}
+.float_middle{
+  float:center;
+  margin:100px;
+}

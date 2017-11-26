@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/HyeYoung-Shin/main_chat_app#readme",
   "dependencies": {
-    "body-parser": "^1.17.2",
+    "body-parser": "^1.18.2",
     "express": "^4.15.3",
+    "mecab-ya": "^0.1.1",
+    "mongoose": "^4.13.4",
     "socket.io": "^2.0.1"
   }
 }
