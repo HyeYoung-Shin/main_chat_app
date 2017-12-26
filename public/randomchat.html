@@ -8,6 +8,7 @@
       .name{ width: 10%; }
       .message{ width: 70%; }
       .chat{ width: 10%;}
+      .report{ wirdth: 5%; height: 5%; }
     </style>
   </head>
   <body>
@@ -24,16 +25,31 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"> </script>
     <script>
       var socket = io();
+      //when user type sentence and push 'chat' button
       $('#chat').on('submit', function(e){
         socket.emit('send message', $('#name').val(), $('#message').val());
         $('#message').val("");
         e.preventDefault();
       });
 
+      //when receive message
       socket.on('receive message', function(msg){
+        //btn = document.createElement("input");
+        //btn.type = "button";
+        //btn.style.width = 80;
+        //btn.value = "report";
+        //document.body.appendChild(btn);
+        //btn.attachEvent("onclick", reported);
+
+        //function reported(obj){
+        //  alert(msg+"가 신고되었습니다.");
+        //}
+
         $('#chatLog').append(msg+"\n");
         $('#chatLog').scrollTop($('#chatLog').innerHeight())
       });
+
+      //when receive warning
       socket.on('receive warning', function(tr){
         if(tr <4){
           alert("경고"+tr+"\n바른 말을 사용합시다~");}
@@ -44,14 +60,15 @@
         }
       });
 
+      //for changing user name
       socket.on('change name', function(name){
         $('#name').val(name);
       });
+
       socket.on('disconnected', function(name){
         $('#chatLog').append(name+" 님이 나갔습니다. \n");
         alert("채팅이 종료되었습니다.\n");
         location.href = "/";
-        //socket.emit('room disconnect');
       });
     </script>
   </body>

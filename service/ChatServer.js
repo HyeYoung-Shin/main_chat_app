@@ -29,13 +29,12 @@ io.sockets.on('connection', function(socket){
     io.sockets.in("room-"+roomnum).emit('receive message', "채팅을 시작하세요.");
   }
 
-
+  //when disconnected from chat server
   socket.on('disconnect', function(){
     socket.leave("room-"+roomnum);
     console.log('user disconnected: ', socket.id);
     socket.broadcast.to("room-"+roomnum).emit('disconnected', name);
   });
-
 
   socket.on('send message', function(name,text){
     var msg = name + ' : '+ text;
@@ -44,7 +43,8 @@ io.sockets.on('connection', function(socket){
     var wordItem;
     var check=0;
     console.log(text);
-    //checking the text with db directory
+
+    //check the message using db directory
     textArray = v.split(text, ' ');
 
     for( var i=0; textArray[i] != null ; i++){
